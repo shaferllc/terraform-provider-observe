@@ -51,7 +51,7 @@ func (f *fakeAPI) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		reply(w, 200, map[string]any{"data": []any{map[string]any{"id": fakeOrg, "name": "Acme", "slug": "acme", "plan": "team", "role": "owner"}}})
 		return
 	case "/regions":
-		reply(w, 200, map[string]any{"data": []any{map[string]any{"id": "us-east"}, map[string]any{"id": "ap-southeast"}}})
+		reply(w, 200, map[string]any{"data": []any{map[string]any{"key": "us-east"}, map[string]any{"key": "ap-southeast"}}})
 		return
 	}
 

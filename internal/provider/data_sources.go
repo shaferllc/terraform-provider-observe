@@ -185,7 +185,7 @@ func (d *regionsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest
 func (d *regionsDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var reply struct {
 		Data []struct {
-			ID string `json:"id"`
+			Key string `json:"key"`
 		} `json:"data"`
 	}
 	if failed(&resp.Diagnostics, "Listing regions", d.data.client.Do(ctx, http.MethodGet, "/regions", nil, &reply)) {
@@ -193,7 +193,7 @@ func (d *regionsDataSource) Read(ctx context.Context, _ datasource.ReadRequest, 
 	}
 	ids := []string{}
 	for _, region := range reply.Data {
-		ids = append(ids, region.ID)
+		ids = append(ids, region.Key)
 	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &struct {
 		IDs []string `tfsdk:"ids"`
