@@ -191,3 +191,34 @@ func orgScopedID(name string) resource.ImportStateIdFunc {
 		return fakeOrg + "/" + s.RootModule().Resources[name].Primary.ID, nil
 	}
 }
+
+func TestAccRepeatingMaintenanceWindowSurvivesRollingForward(t *testing.T) {
+	server := newFakeAPI(t)
+	config := providerBlock(server.URL) + `
+resource "observe_maintenance_window" "weekly" {
+  title      = "Weekly deploy"
+  starts_at  = "2030-01-01T06:00:00Z"
+  ends_at    = "2030-01-01T06:30:00Z"
+  recurrence = "weekly"
+}
+`
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: factories,
+		Steps: []resource.TestStep{
+			{Config: config},
+			{
+				// Observe moves a repeating window on to its next occurrence; that is not a change to plan.
+				PreConfig: func() {
+					f := fakes[server.URL]
+					f.mu.Lock()
+					defer f.mu.Unlock()
+					for _, item := range f.items["/organizations/"+fakeOrg+"/maintenance-windows"] {
+						item["starts_at"], item["ends_at"] = "2030-01-08T06:00:00+00:00", "2030-01-08T06:30:00+00:00"
+					}
+				},
+				Config:   config,
+				PlanOnly: true,
+			},
+		},
+	})
+}

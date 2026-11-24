@@ -20,7 +20,9 @@ var resourceDefs = []resourceDef{
 		name: "monitor",
 		description: "A website monitor. Every check type (uptime, SSL, heartbeat, crawl, Lighthouse, sitemap, robots.txt, domain, " +
 			"DNS records, DNS blocklists, reverse monitor, status page) is set with the API's field names, e.g. `uptime_interval_minutes`, " +
-			"`crawl_monitoring_enabled`. Settings you leave out keep the values Observe gives them.",
+			"`crawl_monitoring_enabled`. Settings you leave out keep the values Observe gives them. Tags are stored lowercase, with dashes " +
+			"for spaces. The monitor's own status page settings (`status_slug`, `status_page_title`, `status_page_message`, `status_page_show`) " +
+			"are kept only while `status_page_enabled` is true with a `status_slug`.",
 		createOp: "createMonitor", updateOp: "updateMonitor",
 		responses:  []string{"Monitor", "Monitor.settings"},
 		collection: "/monitors", getItem: true,
@@ -78,11 +80,18 @@ var resourceDefs = []resourceDef{
 	{
 		name: "maintenance_window",
 		description: "A maintenance window: alerts pause for the monitors it covers. Windows cannot be edited, so any change replaces it; " +
-			"destroying it cancels it. A finished window stays in state.",
+			"destroying it cancels it. A finished window stays in state. A repeating window keeps the first occurrence's " +
+			"`starts_at` and `ends_at` in state while Observe moves it on to the next one.",
 		createOp:  "createMaintenanceWindow",
 		responses: []string{"MaintenanceWindow"}, orgScoped: true, collection: "/maintenance-windows",
 		extra: map[string]extraAttr{"status": {shape: str, description: "scheduled, active, completed or cancelled"}},
 		gone:  func(item client.Object) bool { return item["status"] == "cancelled" },
+		keep: func(prior types.Object) []string {
+			if recurrence, ok := prior.Attributes()["recurrence"].(types.String); ok && recurrence.ValueString() != "" {
+				return []string{"starts_at", "ends_at"}
+			}
+			return nil
+		},
 		keepMissing: func(state types.Object) bool {
 			ends, ok := state.Attributes()["ends_at"].(types.String)
 			at, err := time.Parse(time.RFC3339, ends.ValueString())

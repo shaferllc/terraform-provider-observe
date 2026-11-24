@@ -3,12 +3,12 @@
 page_title: "observe_monitor Resource - observe"
 subcategory: ""
 description: |-
-  A website monitor. Every check type (uptime, SSL, heartbeat, crawl, Lighthouse, sitemap, robots.txt, domain, DNS records, DNS blocklists, reverse monitor, status page) is set with the API's field names, e.g. uptime_interval_minutes, crawl_monitoring_enabled. Settings you leave out keep the values Observe gives them.
+  A website monitor. Every check type (uptime, SSL, heartbeat, crawl, Lighthouse, sitemap, robots.txt, domain, DNS records, DNS blocklists, reverse monitor, status page) is set with the API's field names, e.g. uptime_interval_minutes, crawl_monitoring_enabled. Settings you leave out keep the values Observe gives them. Tags are stored lowercase, with dashes for spaces. The monitor's own status page settings (status_slug, status_page_title, status_page_message, status_page_show) are kept only while status_page_enabled is true with a status_slug.
 ---
 
 # observe_monitor (Resource)
 
-A website monitor. Every check type (uptime, SSL, heartbeat, crawl, Lighthouse, sitemap, robots.txt, domain, DNS records, DNS blocklists, reverse monitor, status page) is set with the API's field names, e.g. `uptime_interval_minutes`, `crawl_monitoring_enabled`. Settings you leave out keep the values Observe gives them.
+A website monitor. Every check type (uptime, SSL, heartbeat, crawl, Lighthouse, sitemap, robots.txt, domain, DNS records, DNS blocklists, reverse monitor, status page) is set with the API's field names, e.g. `uptime_interval_minutes`, `crawl_monitoring_enabled`. Settings you leave out keep the values Observe gives them. Tags are stored lowercase, with dashes for spaces. The monitor's own status page settings (`status_slug`, `status_page_title`, `status_page_message`, `status_page_show`) are kept only while `status_page_enabled` is true with a `status_slug`.
 
 ## Example Usage
 
@@ -24,7 +24,6 @@ resource "observe_monitor" "shop" {
   uptime_check_string         = "Add to cart"
   uptime_alert_after_failures = 2
   uptime_check_headers        = jsonencode({ Accept = "text/html" })
-  uptime_regions              = ["us-east", "ap-southeast"]
 
   # Certificate and domain expiry
   ssl_expiring_soon_days    = 14

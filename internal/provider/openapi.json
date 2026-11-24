@@ -2923,7 +2923,7 @@
                                                     },
                                                     "minItems": 1,
                                                     "maxItems": 50,
-                                                    "description": "Members, in rotation order"
+                                                    "description": "Members who are not viewers, in rotation order"
                                                 }
                                             },
                                             "required": [
@@ -3098,7 +3098,7 @@
                                                     },
                                                     "minItems": 1,
                                                     "maxItems": 50,
-                                                    "description": "Members, in rotation order"
+                                                    "description": "Members who are not viewers, in rotation order"
                                                 }
                                             },
                                             "required": [
@@ -14130,7 +14130,7 @@
                                     },
                                     "minItems": 1,
                                     "maxItems": 50,
-                                    "description": "Members, in rotation order"
+                                    "description": "Members who are not viewers, in rotation order"
                                 }
                             },
                             "required": [

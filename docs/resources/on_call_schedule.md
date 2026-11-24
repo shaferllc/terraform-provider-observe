@@ -65,7 +65,7 @@ Required:
 - `handoff_time` (String) H:i, schedule-local
 - `rotation_hours` (Number) 24 daily, 168 weekly, 336 every two weeks, or any length
 - `starts_on` (String) The first handoff's date
-- `user_ids` (List of String) Members, in rotation order
+- `user_ids` (List of String) Members who are not viewers, in rotation order
 
 Optional:
 

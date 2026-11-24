@@ -39,6 +39,10 @@ It can't stay a subfolder of the app.
    GoReleaser builds every platform, writes the `SHA256SUMS` file and its signature and the registry manifest, and
    creates the GitHub release. The registry picks it up within minutes.
 6. **Check** `terraform init` with `source = "<owner>/observe"` in a clean folder.
+7. **Announce it in the app.** Remove the "coming to the Terraform Registry soon" notice at the top of
+   `resources/views/docs/terraform.blade.php`, and add a changelog entry in `resources/data/changelog.php` saying the
+   provider is available (the 2026-11-24 entry says it is on the way). If the owner isn't `observe-live`, update the
+   `source` in that docs page too.
 
 ## Before each release
 

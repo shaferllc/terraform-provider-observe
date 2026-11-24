@@ -9,7 +9,6 @@ resource "observe_monitor" "shop" {
   uptime_check_string         = "Add to cart"
   uptime_alert_after_failures = 2
   uptime_check_headers        = jsonencode({ Accept = "text/html" })
-  uptime_regions              = ["us-east", "ap-southeast"]
 
   # Certificate and domain expiry
   ssl_expiring_soon_days    = 14

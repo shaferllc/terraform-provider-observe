@@ -34,6 +34,9 @@ type resourceDef struct {
 	skip        []string
 	sensitive   []string
 	extra       map[string]extraAttr // read-only attributes filled by flatten
+	// keep names attributes to leave as they are in state on a read (a repeating maintenance window's
+	// times, which Observe moves on to the next occurrence).
+	keep func(prior types.Object) []string
 	// descriptions replace the spec's for these attributes.
 	descriptions map[string]string
 	flatten      func(client.Object) client.Object
@@ -201,7 +204,14 @@ func (r *genericResource) merge(base types.Object, item client.Object) types.Obj
 	} else if v := attrs["organization_id"]; v.IsUnknown() || v.IsNull() {
 		attrs["organization_id"] = types.StringValue(r.orgID(base))
 	}
+	var keep []string
+	if r.def.keep != nil {
+		keep = r.def.keep(base)
+	}
 	for _, f := range r.fields {
+		if cur := attrs[f.name]; slices.Contains(keep, f.name) && !cur.IsUnknown() && !cur.IsNull() {
+			continue
+		}
 		raw, present := item[f.api]
 		if !present {
 			raw, present = item[f.name]

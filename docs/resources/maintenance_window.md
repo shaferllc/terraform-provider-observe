@@ -3,12 +3,12 @@
 page_title: "observe_maintenance_window Resource - observe"
 subcategory: ""
 description: |-
-  A maintenance window: alerts pause for the monitors it covers. Windows cannot be edited, so any change replaces it; destroying it cancels it. A finished window stays in state.
+  A maintenance window: alerts pause for the monitors it covers. Windows cannot be edited, so any change replaces it; destroying it cancels it. A finished window stays in state. A repeating window keeps the first occurrence's starts_at and ends_at in state while Observe moves it on to the next one.
 ---
 
 # observe_maintenance_window (Resource)
 
-A maintenance window: alerts pause for the monitors it covers. Windows cannot be edited, so any change replaces it; destroying it cancels it. A finished window stays in state.
+A maintenance window: alerts pause for the monitors it covers. Windows cannot be edited, so any change replaces it; destroying it cancels it. A finished window stays in state. A repeating window keeps the first occurrence's `starts_at` and `ends_at` in state while Observe moves it on to the next one.
 
 ## Example Usage
 
