@@ -891,10 +891,8 @@
                                         "items": {
                                             "type": "string",
                                             "enum": [
-                                                "spamhaus_dbl",
                                                 "surbl",
                                                 "uribl",
-                                                "spamhaus_zen",
                                                 "spamcop_bl",
                                                 "barracuda",
                                                 "psbl",
@@ -1811,10 +1809,8 @@
                                         "items": {
                                             "type": "string",
                                             "enum": [
-                                                "spamhaus_dbl",
                                                 "surbl",
                                                 "uribl",
-                                                "spamhaus_zen",
                                                 "spamcop_bl",
                                                 "barracuda",
                                                 "psbl",
@@ -11991,10 +11987,8 @@
                                 "items": {
                                     "type": "string",
                                     "enum": [
-                                        "spamhaus_dbl",
                                         "surbl",
                                         "uribl",
-                                        "spamhaus_zen",
                                         "spamcop_bl",
                                         "barracuda",
                                         "psbl",
