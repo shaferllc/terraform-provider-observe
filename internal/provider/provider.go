@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/observe-live/terraform-provider-observe/internal/client"
+	"github.com/shaferllc/terraform-provider-observe/internal/client"
 )
 
 type observeProvider struct {

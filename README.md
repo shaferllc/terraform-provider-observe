@@ -7,7 +7,7 @@ and [docs/](docs/) (the registry's format).
 ```terraform
 terraform {
   required_providers {
-    observe = { source = "observe-live/observe" }
+    observe = { source = "shaferllc/observe" }
   }
 }
 
@@ -33,7 +33,9 @@ When the API gains a field: `make spec docs`, then `make testacc`.
 - `make test`: unit tests.
 - `make testacc`: acceptance tests. Terraform runs against an in-memory fake of the API
   (`internal/provider/fake_api_test.go`); no account needed.
-- `make install`, then a `dev_overrides` block in `~/.terraformrc` pointing `observe-live/observe` at `~/go/bin`
+- `make install`, then a `dev_overrides` block in `~/.terraformrc` pointing `shaferllc/observe` at `~/go/bin`
   to try a local build.
 
 Releases: see [LISTING.md](LISTING.md).
+
+License: [MPL-2.0](LICENSE).

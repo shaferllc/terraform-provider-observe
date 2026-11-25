@@ -15,7 +15,7 @@ Manage [Observe](https://observe.live) monitors, alerting and status pages as co
 terraform {
   required_providers {
     observe = {
-      source = "observe-live/observe"
+      source = "shaferllc/observe"
     }
   }
 }

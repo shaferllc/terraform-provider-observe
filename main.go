@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 
-	"github.com/observe-live/terraform-provider-observe/internal/provider"
+	"github.com/shaferllc/terraform-provider-observe/internal/provider"
 )
 
 // version is set by GoReleaser.
@@ -23,7 +23,7 @@ func main() {
 
 	err := providerserver.Serve(context.Background(), provider.New(version), providerserver.ServeOpts{
 		// The registry address; change the namespace with the GitHub organization the provider is published from.
-		Address: "registry.terraform.io/observe-live/observe",
+		Address: "registry.terraform.io/shaferllc/observe",
 		Debug:   debug,
 	})
 	if err != nil {

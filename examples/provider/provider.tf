@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     observe = {
-      source = "observe-live/observe"
+      source = "shaferllc/observe"
     }
   }
 }

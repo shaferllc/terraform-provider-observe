@@ -1,48 +1,37 @@
-# Publishing on registry.terraform.io
+# Releasing on registry.terraform.io
 
-The provider is ready to release. The Terraform Registry only publishes from a **public GitHub repository named
-`terraform-provider-observe`** with the provider at its root, so this folder has to be pushed to its own repository.
-It can't stay a subfolder of the app.
+Published as [`shaferllc/observe`](https://registry.terraform.io/providers/shaferllc/observe) from the public
+repository [shaferllc/terraform-provider-observe](https://github.com/shaferllc/terraform-provider-observe). The
+Observe app repository (`packages/terraform-provider-observe`) is the source of truth; never commit to the public
+repository directly.
 
-## To do (Tom)
+## Signing key
 
-1. **Choose the GitHub owner.** The code uses `observe-live` as a placeholder in three places: `go.mod` (module path),
-   `main.go` (`Address: "registry.terraform.io/observe-live/observe"`) and the `source` in `examples/` and
-   `README.md`. If the owner is different, replace `observe-live` everywhere with
-   `grep -rl observe-live . | xargs sed -i '' 's/observe-live/<owner>/g'`, then run `make docs`.
-2. **Create the public repository** `<owner>/terraform-provider-observe` and push this folder as its root:
+Releases are signed with the RSA 4096 key "Shafer LLC Terraform Provider Signing"
+(`004240C3A3AA14154E1D9B06E09F640C5EA4B0C0`, expires 2028-11-24), which is registered on the `shaferllc` namespace
+in the registry. The private key is in Tom's gpg keyring; its passphrase is in the macOS keychain
+(`security find-generic-password -s terraform-provider-signing -a tshafer -w`). Before the key expires, extend it
+(`gpg --quick-set-expire <fingerprint> 2y`) and upload the refreshed public key to the registry.
+
+## Releasing
+
+1. In the app repository, on master: `scripts/sync-terraform-repo`. It pushes this folder's history to the public
+   repository's `main`, with Tom's GitHub noreply address as author and committer.
+2. In a clone of the public repository, tag with the noreply address:
    ```sh
-   cd packages/terraform-provider-observe
-   git init && git add . && git commit -m "Terraform provider for Observe"
-   git remote add origin git@github.com:<owner>/terraform-provider-observe.git
-   git push -u origin main
+   git -c user.name='Tom Shafer' -c user.email=299464+tshafer@users.noreply.github.com tag -a v0.1.1 -m v0.1.1
+   git push origin v0.1.1
    ```
-   Later releases: copy this folder over (or `git subtree split --prefix packages/terraform-provider-observe`) and push.
-3. **Create a GPG signing key** (RSA 4096; the registry does not accept ECC keys) with no passphrase prompt in batch
-   mode, or with gpg-agent caching it:
+3. Unlock the key for gpg-agent (GoReleaser signs in batch mode), then release:
    ```sh
-   gpg --full-generate-key            # RSA and RSA, 4096 bits
-   gpg --list-secret-keys --keyid-format=long
-   gpg --armor --export <KEY_ID>      # the public key, for step 4
+   export GPG_FINGERPRINT=004240C3A3AA14154E1D9B06E09F640C5EA4B0C0
+   security find-generic-password -s terraform-provider-signing -a tshafer -w |
+     gpg --batch --pinentry-mode loopback --passphrase-fd 0 --local-user "$GPG_FINGERPRINT" --detach-sign -o /dev/null /etc/hosts
+   GITHUB_TOKEN=$(gh auth token) goreleaser release --clean
    ```
-   Keep the private key safe (a password manager); every release is signed with it.
-4. **Sign in at registry.terraform.io with GitHub**, add the public key under *User settings → Signing keys* for the
-   owner, then *Publish → Provider* and pick the repository. The registry installs a webhook and imports each new
-   release tag from then on.
-5. **Release** (CI here is not GitHub Actions, so releases run locally; GoReleaser is `brew install goreleaser`):
-   ```sh
-   git tag v0.1.0 && git push origin v0.1.0
-   export GITHUB_TOKEN=<a token with repo scope>
-   export GPG_FINGERPRINT=<the key's fingerprint>
-   goreleaser release --clean
-   ```
-   GoReleaser builds every platform, writes the `SHA256SUMS` file and its signature and the registry manifest, and
-   creates the GitHub release. The registry picks it up within minutes.
-6. **Check** `terraform init` with `source = "<owner>/observe"` in a clean folder.
-7. **Announce it in the app.** Remove the "coming to the Terraform Registry soon" notice at the top of
-   `resources/views/docs/terraform.blade.php`, and add a changelog entry in `resources/data/changelog.php` saying the
-   provider is available (the 2026-11-24 entry says it is on the way). If the owner isn't `observe-live`, update the
-   `source` in that docs page too.
+   GoReleaser builds every platform, writes `SHA256SUMS`, its signature and the registry manifest, and creates
+   the GitHub release. The registry's webhook imports it within minutes.
+4. Check with `terraform init` and `source = "shaferllc/observe"` in a clean folder.
 
 ## Before each release
 

@@ -15,7 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/observe-live/terraform-provider-observe/internal/client"
+	"github.com/shaferllc/terraform-provider-observe/internal/client"
 )
 
 // resourceDef describes one API resource; its attributes come from the create operation's request body in the

@@ -1,4 +1,4 @@
-module github.com/observe-live/terraform-provider-observe
+module github.com/shaferllc/terraform-provider-observe
 
 go 1.25.8
 
